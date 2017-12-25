@@ -22,12 +22,11 @@ StellarHDWallet.generateMnemonic(128)
 const wallet = StellarHDWallet.fromMnemonic(mnemonic)
 
 // wallet instance from seeds
-const seedHex =
-  '794fc27373add3ac7676358e868a787bcbf1edfac83edcecdb34d7f1068c645dbadba563f3f3a4287d273ac4f052d2fc650ba953e7af1a016d7b91f4d273378f'
+const seedHex = '794fc27373add3ac7676358e868a787bcbf1edfac83edcecdb34d7f1068c645dbadba563f3f3a4287d273ac4f052d2fc650ba953e7af1a016d7b91f4d273378f'
 const walletFromHex = StellarHDWallet.fromSeed(seedHex)
 
 const seedBuffer = Buffer.from(seedHex)
-const walletFromBuffer= = StellarHDWallet.fromSeed(seedBuffer)
+const walletFromBuffer = StellarHDWallet.fromSeed(seedBuffer)
 
 // get keys for account 0
 wallet.getKeypair(0) // => StellarBase.Keypair for account 0
@@ -35,5 +34,5 @@ wallet.getPublicKey(0) // => GDKYMXOAJ5MK4EVIHHNWRGAAOUZMNZYAETMHFCD6JCVBPZ77TUA
 wallet.getSecret(0) // => SCVVKNLBHOWBNJYHD3CNROOA2P3K35I5GNTYUHLLMUHMHWQYNEI7LVED
 
 // derive from BIP44 path
-const keyBufferwallet.derive(`m/44'/148'/7'`) // => key as a Buffer
+const keyBuffer = wallet.derive(`m/44'/148'/7'`) // => key as a Buffer
 ```
