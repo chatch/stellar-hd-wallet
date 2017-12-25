@@ -10,29 +10,24 @@ Key derivation for Stellar ([SEP-0005](https://github.com/stellar/stellar-protoc
 ```js
 import StellarHDWallet from 'stellar-hd-wallet'
 
-// generate a new wallet with 24 word mnemonic
-StellarHDWallet.generateMnemonic()
-// => prefer one tongue flock machine scan siege space negative world first mandate world pizza join apple three oyster bread today gun horn bitter subway
-
-// generate a new wallet with 12 word mnemonic (128 bits of entropy)
-StellarHDWallet.generateMnemonic(128)
-// => silly struggle dish lift bus barely myth odor stable twice destroy boss
-
-// wallet instance from mnemonic
+const mnemonic = StellarHDWallet.generateMnemonic()
 const wallet = StellarHDWallet.fromMnemonic(mnemonic)
 
-// wallet instance from seeds
-const seedHex = '794fc27373add3ac7676358e868a787bcbf1edfac83edcecdb34d7f1068c645dbadba563f3f3a4287d273ac4f052d2fc650ba953e7af1a016d7b91f4d273378f'
-const walletFromHex = StellarHDWallet.fromSeed(seedHex)
-
-const seedBuffer = Buffer.from(seedHex)
-const walletFromBuffer = StellarHDWallet.fromSeed(seedBuffer)
-
-// get keys for account 0
-wallet.getKeypair(0) // => StellarBase.Keypair for account 0
 wallet.getPublicKey(0) // => GDKYMXOAJ5MK4EVIHHNWRGAAOUZMNZYAETMHFCD6JCVBPZ77TUAZFPKT
 wallet.getSecret(0) // => SCVVKNLBHOWBNJYHD3CNROOA2P3K35I5GNTYUHLLMUHMHWQYNEI7LVED
+wallet.getKeypair(0) // => StellarBase.Keypair for account 0
+wallet.derive(`m/44'/148'/7'`) // => key for account 0 as a Buffer
 
-// derive from BIP44 path
-const keyBuffer = wallet.derive(`m/44'/148'/7'`) // => key as a Buffer
+// wallet instance from seeds
+const seedHex =
+  '794fc27373add3ac7676358e868a787bcbf1edfac83edcecdb34d7f1068c645dbadba563f3f3a4287d273ac4f052d2fc650ba953e7af1a016d7b91f4d273378f'
+const seedBuffer = Buffer.from(seedHex)
+StellarHDWallet.fromSeed(seedHex)
+StellarHDWallet.fromSeed(seedBuffer)
+
+// mnemonics with different lengths
+StellarHDWallet.generateMnemonic() // 24 words
+StellarHDWallet.generateMnemonic(224) // 21 words
+StellarHDWallet.generateMnemonic(160) // 18 words
+StellarHDWallet.generateMnemonic(128) // 12 words
 ```
