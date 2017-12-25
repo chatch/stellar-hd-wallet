@@ -1,0 +1,36 @@
+{
+  "name": "stellar-hd-wallet",
+  "version": "0.0.1",
+  "description": "Key derivation for Stellar (SEP-0005)",
+  "author": "Chris Hatch",
+  "repository": "chatch/stellar-hd-wallet",
+  "license": "Apache-2.0",
+  "main": "lib/stellar-hd-wallet.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "mocha --require babel-register",
+    "prepublish": "./node_modules/.bin/babel src --out-dir lib"
+  },
+  "keywords": [
+    "SEP-0005",
+    "SLIP-0010",
+    "BIP-0039",
+    "BIP-0044",
+    "ed25519",
+    "stellar",
+    "cryptocurrencies",
+    "keys"
+  ],
+  "dependencies": {
+    "bip39": "^2.4.0",
+    "ed25519-hd-key": "^0.5.0",
+    "stellar-base": "^0.7.6"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.26.0",
+    "mocha": "^4.0.1"
+  }
+}
