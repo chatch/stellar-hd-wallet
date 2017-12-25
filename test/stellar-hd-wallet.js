@@ -37,33 +37,64 @@ describe('StellarHDWallet', () => {
   })
 
   describe('generateMnemonic', () => {
-    const assertInvalidEntropy = entropy => {
-      try {
-        StellarHDWallet.generateMnemonic(entropy)
-        assert.fail(`expected error`)
-      } catch (err) {
-        assert.equal(err.message, 'Invalid entropy')
+    describe('entropy', () => {
+      const assertInvalidEntropy = entropy => {
+        try {
+          StellarHDWallet.generateMnemonic({entropyBits: entropy})
+          assert.fail(`expected error`)
+        } catch (err) {
+          assert.equal(err.message, 'Invalid entropy')
+        }
       }
-    }
 
-    it('generates a 24 word seed by default', () => {
-      const mnemonic = StellarHDWallet.generateMnemonic()
-      assert.equal(mnemonic.split(' ').length, 24)
+      it('generates a 24 word seed by default', () => {
+        const mnemonic = StellarHDWallet.generateMnemonic()
+        assert.equal(mnemonic.split(' ').length, 24)
+      })
+
+      it('generates a 12 word seed for 128 bits entropy', () => {
+        const mnemonic = StellarHDWallet.generateMnemonic({entropyBits: 128})
+        assert.equal(mnemonic.split(' ').length, 12)
+      })
+
+      it('rejects entropy if not a multiple of 32', () => {
+        assertInvalidEntropy(129)
+        assertInvalidEntropy(200)
+      })
+
+      it('rejects entropy if out of range [128 - 256]', () => {
+        assertInvalidEntropy(129)
+        assertInvalidEntropy(257)
+      })
     })
 
-    it('generates a 12 word seed for 128 bits entropy', () => {
-      const mnemonic = StellarHDWallet.generateMnemonic(128)
-      assert.equal(mnemonic.split(' ').length, 12)
-    })
+    describe('language', () => {
+      it('supports bip39 languages', () => {
+        const chineseWordlist = bip39.wordlists['chinese_traditional']
+        const mnemonic = StellarHDWallet.generateMnemonic({
+          language: 'chinese_traditional',
+        })
 
-    it('rejects entropy if not a multiple of 32', () => {
-      assertInvalidEntropy(129)
-      assertInvalidEntropy(200)
-    })
+        const mnemonicWords = mnemonic.split(' ')
+        assert.equal(mnemonicWords.length, 24)
 
-    it('rejects entropy if out of range [128 - 256]', () => {
-      assertInvalidEntropy(129)
-      assertInvalidEntropy(257)
+        const wordsInDict = mnemonicWords.filter(
+          w => chineseWordlist.indexOf(w) !== -1
+        )
+        assert.equal(wordsInDict.length, 24)
+      })
+
+      it('rejects unsupported bip39 languages with meaningful message', () => {
+        try {
+          StellarHDWallet.generateMnemonic({language: 'toki_pona'})
+          assert.fail(`expected error`)
+        } catch (err) {
+          assert.equal(
+            err.message,
+            'Language toki_pona does not have a wordlist in the bip39 module'
+          )
+        }
+      })
     })
   })
 })

@@ -27,7 +27,29 @@ StellarHDWallet.fromSeed(seedBuffer)
 
 // mnemonics with different lengths
 StellarHDWallet.generateMnemonic() // 24 words
-StellarHDWallet.generateMnemonic(224) // 21 words
-StellarHDWallet.generateMnemonic(160) // 18 words
-StellarHDWallet.generateMnemonic(128) // 12 words
+StellarHDWallet.generateMnemonic({entropyBits: 224}) // 21 words
+StellarHDWallet.generateMnemonic({entropyBits: 160}) // 18 words
+StellarHDWallet.generateMnemonic({entropyBits: 128}) // 12 words
+```
+
+## Mnemonic Language
+
+Mnemonics can be generated in any language supported by the underlying [bip39 npm module](https://github.com/bitcoinjs/bip39).
+
+The full list of language keys are under exports 'wordlists' [here](https://github.com/bitcoinjs/bip39/blob/master/index.js).
+
+### Usage
+
+```js
+import StellarHDWallet from 'stellar-hd-wallet'
+
+// traditional chinese - 24 words
+StellarHDWallet.generateMnemonic({
+  language: 'chinese_traditional',
+})
+// => '省 从 唯 芽 激 顿 埋 愤 碳 它 炸 如 青 领 涨 骤 度 牲 朱 师 即 姓 讲 蒋'
+
+// french - 12 words
+StellarHDWallet.generateMnemonic({language: 'french', entropyBits: 128})
+// => 'directif terrible légume dérober science vision venimeux exulter abrasif vague mutuel innocent'
 ```

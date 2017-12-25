@@ -1,3 +1,4 @@
+import has from 'lodash/has'
 import bip39 from 'bip39'
 import {derivePath, getMasterKeyFromSeed, getPublicKey} from 'ed25519-hd-key'
 import {Keypair} from 'stellar-base'
@@ -36,10 +37,22 @@ class StellarHDWallet {
 
   /**
    * Generate a mnemonic using BIP39
-   * @param {Number} [entropyBits=256] Entropy bits
+   * @param {Object} props Properties defining how to generate the mnemonic
+   * @param {Number} [props.entropyBits=256] Entropy bits
+   * @param {string} [props.language='english'] name of a language wordlist as
+   *          defined in the 'bip39' npm module. See module.exports.wordlists:
+   *          here https://github.com/bitcoinjs/bip39/blob/master/index.js
+   * @param {function} [props.rng] RNG function (default is crypto.randomBytes)
    */
-  static generateMnemonic(entropyBits = ENTROPY_BITS) {
-    return bip39.generateMnemonic(entropyBits)
+  static generateMnemonic(
+    {entropyBits = ENTROPY_BITS, language = 'english', rngFn = undefined} = {}
+  ) {
+    if (language && !has(bip39.wordlists, language))
+      throw new TypeError(
+        `Language ${language} does not have a wordlist in the bip39 module`
+      )
+    const wordlist = bip39.wordlists[language]
+    return bip39.generateMnemonic(entropyBits, rngFn, wordlist)
   }
 
   /**
