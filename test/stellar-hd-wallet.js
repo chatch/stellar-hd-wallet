@@ -84,6 +84,22 @@ describe('StellarHDWallet', () => {
         assert.equal(wordsInDict.length, 24)
       })
 
+      // issue #1
+      it('supports korean language', () => {
+        const koreanWordlist = bip39.wordlists['korean']
+        const mnemonic = StellarHDWallet.generateMnemonic({
+          language: 'korean',
+        })
+
+        const mnemonicWords = mnemonic.split(' ')
+        assert.equal(mnemonicWords.length, 24)
+
+        const wordsInDict = mnemonicWords.filter(
+          w => koreanWordlist.indexOf(w) !== -1
+        )
+        assert.equal(wordsInDict.length, 24)
+      })
+
       it('rejects unsupported bip39 languages with meaningful message', () => {
         try {
           StellarHDWallet.generateMnemonic({language: 'toki_pona'})

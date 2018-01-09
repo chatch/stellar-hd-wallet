@@ -24,7 +24,7 @@
     "keys"
   ],
   "dependencies": {
-    "bip39": "^2.4.0",
+    "bip39": "^2.5.0",
     "ed25519-hd-key": "^0.5.0",
     "stellar-base": "^0.7.6"
   },
