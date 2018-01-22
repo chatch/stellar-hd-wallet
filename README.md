@@ -54,6 +54,13 @@ StellarHDWallet.generateMnemonic({language: 'french', entropyBits: 128})
 // => 'directif terrible légume dérober science vision venimeux exulter abrasif vague mutuel innocent'
 ```
 
+## Randomness
+
+* NodeJs: crypto.randomBytes
+* Browser: window.crypto.getRandomValues
+
+(using [randombytes npm module](https://github.com/crypto-browserify/randombytes))
+
 ## Tests
 
 All [SEP-0005 test cases](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0005.md#test-cases) are exercised [here](https://github.com/chatch/stellar-hd-wallet/blob/master/test/sep0005.js) against [these](https://github.com/chatch/stellar-hd-wallet/tree/master/test/data).
