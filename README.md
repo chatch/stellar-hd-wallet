@@ -30,6 +30,9 @@ StellarHDWallet.generateMnemonic() // 24 words
 StellarHDWallet.generateMnemonic({entropyBits: 224}) // 21 words
 StellarHDWallet.generateMnemonic({entropyBits: 160}) // 18 words
 StellarHDWallet.generateMnemonic({entropyBits: 128}) // 12 words
+
+// validate a mnemonic
+StellarHDWallet.validateMnemonic('too short and non wordlist words') // false
 ```
 
 ## Mnemonic Language
@@ -64,4 +67,3 @@ StellarHDWallet.generateMnemonic({language: 'french', entropyBits: 128})
 ## Tests
 
 All [SEP-0005 test cases](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0005.md#test-cases) are exercised [here](https://github.com/chatch/stellar-hd-wallet/blob/master/test/sep0005.js) against [these](https://github.com/chatch/stellar-hd-wallet/tree/master/test/data).
-
