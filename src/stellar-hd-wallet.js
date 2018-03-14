@@ -56,6 +56,22 @@ class StellarHDWallet {
   }
 
   /**
+   * Validate a mnemonic using BIP39
+   * @param {string} mnemonic A BIP39 mnemonic
+   * @param {string} [language='english'] name of a language wordlist as
+   *          defined in the 'bip39' npm module. See module.exports.wordlists:
+   *          here https://github.com/bitcoinjs/bip39/blob/master/index.js
+   */
+  static validateMnemonic(mnemonic, language = 'english') {
+    if (language && !has(bip39.wordlists, language))
+      throw new TypeError(
+        `Language ${language} does not have a wordlist in the bip39 module`
+      )
+    const wordlist = bip39.wordlists[language]
+    return bip39.validateMnemonic(mnemonic, wordlist)
+  }
+
+    /**
    * New instance from seed hex string
    * @param {string} seedHex Hex string
    */
