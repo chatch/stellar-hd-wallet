@@ -18,6 +18,7 @@ class StellarHDWallet {
    * @param {string} mnemonic A BIP39 mnemonic
    * @param {string} [password] Optional mnemonic password
    * @param {string} [language='english'] Optional language of mnemonic
+   * @throws {Error} Invalid Mnemonic
    */
   static fromMnemonic(mnemonic, password = undefined, language = 'english') {
     if (!StellarHDWallet.validateMnemonic(mnemonic, language)) {
@@ -29,6 +30,7 @@ class StellarHDWallet {
   /**
    * Instance from a seed
    * @param {(string|Buffer)} binary seed
+   * @throws {TypeError} Invalid seed
    */
   static fromSeed(seed) {
     let seedHex
@@ -48,6 +50,8 @@ class StellarHDWallet {
    *          defined in the 'bip39' npm module. See module.exports.wordlists:
    *          here https://github.com/bitcoinjs/bip39/blob/master/index.js
    * @param {function} [props.rng] RNG function (default is crypto.randomBytes)
+   * @throws {TypeError} Langauge not supported by bip39 module
+   * @throws {TypeError} Invalid entropy
    */
   static generateMnemonic({
     entropyBits = ENTROPY_BITS,
@@ -68,6 +72,7 @@ class StellarHDWallet {
    * @param {string} [language='english'] name of a language wordlist as
    *          defined in the 'bip39' npm module. See module.exports.wordlists:
    *          here https://github.com/bitcoinjs/bip39/blob/master/index.js
+   * @throws {TypeError} Langauge not supported by bip39 module
    */
   static validateMnemonic(mnemonic, language = 'english') {
     if (language && !has(bip39.wordlists, language))
