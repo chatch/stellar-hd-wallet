@@ -2,37 +2,100 @@ import assert from 'assert'
 import bip39 from 'bip39'
 import StellarHDWallet from '../src/stellar-hd-wallet'
 
-const MNEMONIC =
+const MNEMONIC_ENGLISH =
   'asthma blouse security reform bread mesh roast garage ' +
   'win clock aerobic gauge emotion slender frozen profit ' +
   'duck uphold time perfect giggle drop turn movie'
+const MNEMONIC_KOREAN =
+  '한쪽 공개 학점 거액 재빨리 주민 해군 조절 종로 여론 성당 송아지'
 
-const SEED_BUFFER = bip39.mnemonicToSeed(MNEMONIC)
-const SEED_HEX = bip39.mnemonicToSeedHex(MNEMONIC)
-
-const PUBLIC_KEY_0 = 'GBJCYUFJA7VA4GOZV7ZFVB7FGZTLVQTNS7JWJOWQVK6GN7DBUW7L5I5O'
-const SECRET_KEY_0 = 'SC4SPBMTO3FAKHIW5EGMOX6UR6ILGBKHFWUPKN4QHEU426UBU4CKFNHW'
+const FROM_MNEMONIC_ENGLISH_PUBLIC_KEY_0 =
+  'GBJCYUFJA7VA4GOZV7ZFVB7FGZTLVQTNS7JWJOWQVK6GN7DBUW7L5I5O'
+const FROM_MNEMONIC_ENGLISH_SECRET_KEY_0 =
+  'SC4SPBMTO3FAKHIW5EGMOX6UR6ILGBKHFWUPKN4QHEU426UBU4CKFNHW'
 
 describe('StellarHDWallet', () => {
   describe('fromMnemonic', () => {
-    it('creates wallet from mnemonic', () => {
-      const wallet = StellarHDWallet.fromMnemonic(MNEMONIC)
-      assert.equal(PUBLIC_KEY_0, wallet.getPublicKey(0))
-      assert.equal(SECRET_KEY_0, wallet.getSecret(0))
+    it('creates wallet from mnemonic with defaults', () => {
+      const wallet = StellarHDWallet.fromMnemonic(MNEMONIC_ENGLISH)
+      assert.equal(FROM_MNEMONIC_ENGLISH_PUBLIC_KEY_0, wallet.getPublicKey(0))
+      assert.equal(FROM_MNEMONIC_ENGLISH_SECRET_KEY_0, wallet.getSecret(0))
+    })
+
+    it('creates wallet from mnemonic with specific language', () => {
+      const expectedPublic =
+        'GCFWJRACE5TMTPAOF2DCOJXARZT23LW47C3YW22CAMWFJJJ25NYLCXND'
+      const expectedSecret =
+        'SBLSO6PNV55E7N3KEP5EML6L3BQT35F3LUKZL4ZY5T3UXWZZJW6DHQAO'
+      const wallet = StellarHDWallet.fromMnemonic(
+        MNEMONIC_KOREAN,
+        undefined,
+        'korean'
+      )
+      assert.equal(expectedPublic, wallet.getPublicKey(0))
+      assert.equal(expectedSecret, wallet.getSecret(0))
+    })
+
+    it('creates wallet from mnemonic with password', () => {
+      const expectedPublic =
+        'GCQR32FP47DBS2TESSTXWGI5ZAEYV43SD45QNMTB6R7Q4CBONEMBMCC6'
+      const expectedSecret =
+        'SB3XPQZ5JMINM2VECDHH5YQWFH2RGMDC54JUHSLZZ2OAN4TNTZ4NDJMB'
+      const wallet = StellarHDWallet.fromMnemonic(MNEMONIC_ENGLISH, 'password')
+      assert.equal(expectedPublic, wallet.getPublicKey(0))
+      assert.equal(expectedSecret, wallet.getSecret(0))
+    })
+
+    it('creates wallet from mnemonic with password AND specific language', () => {
+      const expectedPublic =
+        'GDHHKYVBHPMAQ7LEUXZSV5SJD67RRJNGTSVSQ5G76633XYYYMFYJG6DW'
+      const expectedSecret =
+        'SDMDPWEW2JXUH7CZMGZTHWYAV25JKV4QJCM44II5XYUBYBHKQUZVBTFF'
+      const wallet = StellarHDWallet.fromMnemonic(
+        MNEMONIC_KOREAN,
+        '스텔라',
+        'korean'
+      )
+      assert.equal(expectedPublic, wallet.getPublicKey(0))
+      assert.equal(expectedSecret, wallet.getSecret(0))
+    })
+
+    const expectInvalidMnemonicFailure = mnemonic => {
+      try {
+        StellarHDWallet.fromMnemonic(mnemonic)
+        assert.fail(`expected error`)
+      } catch (err) {
+        assert.equal(err.message, 'Invalid mnemonic (see bip39)')
+      }
+    }
+
+    it('empty mnemonic throws', () => {
+      expectInvalidMnemonicFailure()
+      expectInvalidMnemonicFailure('')
+      expectInvalidMnemonicFailure(null)
+      expectInvalidMnemonicFailure(undefined, 'password', 'italian')
+      expectInvalidMnemonicFailure('', 'password', 'italian')
+    })
+
+    it('invalid mnemonic throws', () => {
+      expectInvalidMnemonicFailure('phrase') // short
+      expectInvalidMnemonicFailure('stellar') // invalid word AND short
     })
   })
 
   describe('fromSeed', () => {
     it('creates wallet from seed hex string', () => {
-      const wallet = StellarHDWallet.fromSeed(SEED_HEX)
-      assert.equal(PUBLIC_KEY_0, wallet.getPublicKey(0))
-      assert.equal(SECRET_KEY_0, wallet.getSecret(0))
+      const seedHex = bip39.mnemonicToSeedHex(MNEMONIC_ENGLISH)
+      const wallet = StellarHDWallet.fromSeed(seedHex)
+      assert.equal(FROM_MNEMONIC_ENGLISH_PUBLIC_KEY_0, wallet.getPublicKey(0))
+      assert.equal(FROM_MNEMONIC_ENGLISH_SECRET_KEY_0, wallet.getSecret(0))
     })
 
     it('creates wallet from seed Buffer', () => {
-      const wallet = StellarHDWallet.fromSeed(SEED_BUFFER)
-      assert.equal(PUBLIC_KEY_0, wallet.getPublicKey(0))
-      assert.equal(SECRET_KEY_0, wallet.getSecret(0))
+      const seedBuffer = bip39.mnemonicToSeed(MNEMONIC_ENGLISH)
+      const wallet = StellarHDWallet.fromSeed(seedBuffer)
+      assert.equal(FROM_MNEMONIC_ENGLISH_PUBLIC_KEY_0, wallet.getPublicKey(0))
+      assert.equal(FROM_MNEMONIC_ENGLISH_SECRET_KEY_0, wallet.getSecret(0))
     })
   })
 
@@ -119,7 +182,7 @@ describe('StellarHDWallet', () => {
 
     it('passes valid mnemonic input', () => {
       // 24 word
-      assert.equal(val(MNEMONIC), true)
+      assert.equal(val(MNEMONIC_ENGLISH), true)
       // 12 word
       assert.equal(
         val(StellarHDWallet.generateMnemonic({entropyBits: 128})),
@@ -142,7 +205,7 @@ describe('StellarHDWallet', () => {
     })
 
     it('rejects mnemonic with word not in wordlist', () => {
-      const mnemonic = MNEMONIC.split(' ').slice(1)
+      const mnemonic = MNEMONIC_ENGLISH.split(' ').slice(1)
       mnemonic.push('stellar')
       assert.equal(val(mnemonic.join(' ')), false)
     })

@@ -6,6 +6,7 @@ import {Keypair} from 'stellar-base'
 const ENTROPY_BITS = 256 // = 24 word mnemonic
 
 const INVALID_SEED = 'Invalid seed (must be a Buffer or hex string)'
+const INVALID_MNEMONIC = 'Invalid mnemonic (see bip39)'
 
 /**
  * Class for SEP-0005 key derivation.
@@ -16,8 +17,12 @@ class StellarHDWallet {
    * Instance from a BIP39 mnemonic string.
    * @param {string} mnemonic A BIP39 mnemonic
    * @param {string} [password] Optional mnemonic password
+   * @param {string} [language='english'] Optional language of mnemonic
    */
-  static fromMnemonic(mnemonic, password = undefined) {
+  static fromMnemonic(mnemonic, password = undefined, language = 'english') {
+    if (!StellarHDWallet.validateMnemonic(mnemonic, language)) {
+      throw new Error(INVALID_MNEMONIC)
+    }
     return new StellarHDWallet(bip39.mnemonicToSeedHex(mnemonic, password))
   }
 
@@ -44,9 +49,11 @@ class StellarHDWallet {
    *          here https://github.com/bitcoinjs/bip39/blob/master/index.js
    * @param {function} [props.rng] RNG function (default is crypto.randomBytes)
    */
-  static generateMnemonic(
-    {entropyBits = ENTROPY_BITS, language = 'english', rngFn = undefined} = {}
-  ) {
+  static generateMnemonic({
+    entropyBits = ENTROPY_BITS,
+    language = 'english',
+    rngFn = undefined,
+  } = {}) {
     if (language && !has(bip39.wordlists, language))
       throw new TypeError(
         `Language ${language} does not have a wordlist in the bip39 module`
@@ -71,7 +78,7 @@ class StellarHDWallet {
     return bip39.validateMnemonic(mnemonic, wordlist)
   }
 
-    /**
+  /**
    * New instance from seed hex string
    * @param {string} seedHex Hex string
    */
