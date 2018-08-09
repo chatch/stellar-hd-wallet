@@ -1,6 +1,6 @@
 {
   "name": "stellar-hd-wallet",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Key derivation for Stellar (SEP-0005)",
   "author": "Chris Hatch",
   "repository": "chatch/stellar-hd-wallet",
@@ -27,7 +27,7 @@
     "bip39": "^2.5.0",
     "ed25519-hd-key": "^0.5.0",
     "lodash": "4.17.10",
-    "stellar-base": "^0.8.1"
+    "stellar-base": "^0.8.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
