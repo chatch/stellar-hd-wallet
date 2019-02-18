@@ -1,12 +1,12 @@
-import has from 'lodash/has'
-import bip39 from 'bip39'
-import {derivePath, getMasterKeyFromSeed, getPublicKey} from 'ed25519-hd-key'
-import {Keypair} from 'stellar-base'
+import has from "lodash/has";
+import bip39 from "bip39";
+import {derivePath} from "./hd-key";
+import {Keypair} from "stellar-base";
 
-const ENTROPY_BITS = 256 // = 24 word mnemonic
+const ENTROPY_BITS = 256; // = 24 word mnemonic
 
-const INVALID_SEED = 'Invalid seed (must be a Buffer or hex string)'
-const INVALID_MNEMONIC = 'Invalid mnemonic (see bip39)'
+const INVALID_SEED = "Invalid seed (must be a Buffer or hex string)";
+const INVALID_MNEMONIC = "Invalid mnemonic (see bip39)";
 
 /**
  * Class for SEP-0005 key derivation.
@@ -20,11 +20,11 @@ class StellarHDWallet {
    * @param {string} [language='english'] Optional language of mnemonic
    * @throws {Error} Invalid Mnemonic
    */
-  static fromMnemonic(mnemonic, password = undefined, language = 'english') {
+  static fromMnemonic(mnemonic, password = undefined, language = "english") {
     if (!StellarHDWallet.validateMnemonic(mnemonic, language)) {
-      throw new Error(INVALID_MNEMONIC)
+      throw new Error(INVALID_MNEMONIC);
     }
-    return new StellarHDWallet(bip39.mnemonicToSeedHex(mnemonic, password))
+    return new StellarHDWallet(bip39.mnemonicToSeedHex(mnemonic, password));
   }
 
   /**
@@ -33,13 +33,13 @@ class StellarHDWallet {
    * @throws {TypeError} Invalid seed
    */
   static fromSeed(seed) {
-    let seedHex
+    let seedHex;
 
-    if (Buffer.isBuffer(seed)) seedHex = seed.toString('hex')
-    else if (typeof seed === 'string') seedHex = seed
-    else throw new TypeError(INVALID_SEED)
+    if (Buffer.isBuffer(seed)) seedHex = seed.toString("hex");
+    else if (typeof seed === "string") seedHex = seed;
+    else throw new TypeError(INVALID_SEED);
 
-    return new StellarHDWallet(seedHex)
+    return new StellarHDWallet(seedHex);
   }
 
   /**
@@ -55,15 +55,15 @@ class StellarHDWallet {
    */
   static generateMnemonic({
     entropyBits = ENTROPY_BITS,
-    language = 'english',
-    rngFn = undefined,
+    language = "english",
+    rngFn = undefined
   } = {}) {
     if (language && !has(bip39.wordlists, language))
       throw new TypeError(
         `Language ${language} does not have a wordlist in the bip39 module`
-      )
-    const wordlist = bip39.wordlists[language]
-    return bip39.generateMnemonic(entropyBits, rngFn, wordlist)
+      );
+    const wordlist = bip39.wordlists[language];
+    return bip39.generateMnemonic(entropyBits, rngFn, wordlist);
   }
 
   /**
@@ -74,13 +74,13 @@ class StellarHDWallet {
    *          here https://github.com/bitcoinjs/bip39/blob/master/index.js
    * @throws {TypeError} Langauge not supported by bip39 module
    */
-  static validateMnemonic(mnemonic, language = 'english') {
+  static validateMnemonic(mnemonic, language = "english") {
     if (language && !has(bip39.wordlists, language))
       throw new TypeError(
         `Language ${language} does not have a wordlist in the bip39 module`
-      )
-    const wordlist = bip39.wordlists[language]
-    return bip39.validateMnemonic(mnemonic, wordlist)
+      );
+    const wordlist = bip39.wordlists[language];
+    return bip39.validateMnemonic(mnemonic, wordlist);
   }
 
   /**
@@ -88,7 +88,7 @@ class StellarHDWallet {
    * @param {string} seedHex Hex string
    */
   constructor(seedHex) {
-    this.seedHex = seedHex
+    this.seedHex = seedHex;
   }
 
   /**
@@ -97,8 +97,8 @@ class StellarHDWallet {
    * @return {Buffer} Key binary as Buffer
    */
   derive(path) {
-    const data = derivePath(path, this.seedHex)
-    return data.key
+    const data = derivePath(path, this.seedHex);
+    return data.key;
   }
 
   /**
@@ -107,8 +107,8 @@ class StellarHDWallet {
    * @return {stellar-base.Keypair} Keypair instance for the account
    */
   getKeypair(index) {
-    const key = this.derive(`m/44'/148'/${index}'`)
-    return Keypair.fromRawEd25519Seed(key)
+    const key = this.derive(`m/44'/148'/${index}'`);
+    return Keypair.fromRawEd25519Seed(key);
   }
 
   /**
@@ -117,7 +117,7 @@ class StellarHDWallet {
    * @return {string} Public key
    */
   getPublicKey(index) {
-    return this.getKeypair(index).publicKey()
+    return this.getKeypair(index).publicKey();
   }
 
   /**
@@ -126,8 +126,8 @@ class StellarHDWallet {
    * @return {string} Secret
    */
   getSecret(index) {
-    return this.getKeypair(index).secret()
+    return this.getKeypair(index).secret();
   }
 }
 
-export default StellarHDWallet
+export default StellarHDWallet;

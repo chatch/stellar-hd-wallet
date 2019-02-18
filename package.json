@@ -25,14 +25,14 @@
   ],
   "dependencies": {
     "bip39": "^2.5.0",
-    "ed25519-hd-key": "^0.5.0",
-    "lodash": "4.17.10",
-    "stellar-base": "^0.8.2"
+    "create-hmac": "^1.1.7",
+    "lodash": "^4.17.11",
+    "stellar-base": "^0.11.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-preset-env": "^1.6.1",
+    "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
     "mocha": "^4.0.1"
   }
