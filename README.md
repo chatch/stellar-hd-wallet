@@ -1,7 +1,7 @@
 # stellar-hd-wallet
 
 [![NPM Package](https://img.shields.io/npm/v/stellar-hd-wallet.svg?style=flat-square)](https://www.npmjs.org/package/stellar-hd-wallet)
-[![Build Status](https://img.shields.io/travis/chatch/stellar-hd-wallet.svg?branch=master&style=flat-square)](https://travis-ci.org/chatch/stellar-hd-wallet)
+[![Build Status](https://img.shields.io/travis/chatch/stellar-hd-wallet.svg?branch=master&style=flat-square)](https://travis-ci.com/chatch/stellar-hd-wallet)
 
 Key derivation for Stellar ([SEP-0005](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0005.md))
 
