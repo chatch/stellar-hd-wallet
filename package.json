@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Key derivation for Stellar (SEP-0005)",
   "author": "Chris Hatch",
-  "repository": "chatch/stellar-hd-wallet",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chatch/stellar-hd-wallet.git"
+  },
   "license": "Apache-2.0",
   "type": "module",
   "main": "lib/stellar-hd-wallet.js",
