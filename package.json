@@ -1,17 +1,28 @@
 {
   "name": "stellar-hd-wallet",
-  "version": "0.0.10",
+  "version": "1.0.0",
   "description": "Key derivation for Stellar (SEP-0005)",
   "author": "Chris Hatch",
   "repository": "chatch/stellar-hd-wallet",
   "license": "Apache-2.0",
+  "type": "module",
   "main": "lib/stellar-hd-wallet.js",
+  "types": "lib/stellar-hd-wallet.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/stellar-hd-wallet.d.ts",
+      "import": "./lib/stellar-hd-wallet.js"
+    }
+  },
   "files": [
     "lib"
   ],
   "scripts": {
-    "test": "mocha --require babel-register",
-    "prepublish": "./node_modules/.bin/babel src --out-dir lib"
+    "test": "mocha --require ts-node/register --loader=ts-node/esm test/**/*.ts",
+    "build": "tsc",
+    "clean": "rimraf lib",
+    "prepare": "npm run clean && npm run build",
+    "prepublish": "npm run prepare"
   },
   "keywords": [
     "SEP-0005",
@@ -24,16 +35,20 @@
     "keys"
   ],
   "dependencies": {
-    "bip39": "^2.5.0",
-    "create-hmac": "^1.1.7",
-    "lodash": "^4.17.11",
-    "stellar-base": "^0.13.1"
+    "@stellar/stellar-base": "12.1.1",
+    "@types/create-hmac": "1.1.1",
+    "bip39": "3.1.0",
+    "create-hmac": "1.1.7"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-preset-env": "^1.7.0",
-    "babel-register": "^6.26.0",
-    "mocha": "^4.0.1"
+    "@types/lodash": "^4.14.202",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.16",
+    "lodash": "4.17.21",
+    "mocha": "^11.1.0",
+    "rimraf": "^5.0.5",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.3.3"
   }
 }

@@ -8,12 +8,17 @@
  * The original ed25519-hd-key module is licensed under "GPL-3".
  */
 
-const createHmac = require("create-hmac/browser");
+import createHmac from "create-hmac";
 
 const ED25519_CURVE = 'ed25519 seed';
 const HARDENED_OFFSET = 0x80000000;
 
-export const derivePath = (path, seed) => {
+export interface KeyData {
+    key: Buffer;
+    chainCode: Buffer;
+}
+
+export const derivePath = (path: string, seed: string): KeyData => {
     if (!isValidPath(path)) {
         throw new Error('Invalid derivation path');
     }
@@ -30,7 +35,7 @@ export const derivePath = (path, seed) => {
     );
 };
 
-const getMasterKeyFromSeed = (seed) => {
+const getMasterKeyFromSeed = (seed: string): KeyData => {
     const hmac = createHmac('sha512', ED25519_CURVE);
     const I = hmac.update(Buffer.from(seed, 'hex')).digest();
     const IL = I.slice(0, 32);
@@ -41,7 +46,7 @@ const getMasterKeyFromSeed = (seed) => {
     };
 };
 
-const CKDPriv = ({ key, chainCode }, index) => {
+const CKDPriv = ({ key, chainCode }: KeyData, index: number): KeyData => {
     const indexBuffer = Buffer.allocUnsafe(4);
     indexBuffer.writeUInt32BE(index, 0);
     const data = Buffer.concat([Buffer.alloc(1, 0), key, indexBuffer]);
@@ -56,9 +61,9 @@ const CKDPriv = ({ key, chainCode }, index) => {
     };
 };
 
-const replaceDerive = (val) => val.replace("'", '');
+const replaceDerive = (val: string): string => val.replace("'", '');
 const pathRegex = new RegExp("^m(\\/[0-9]+')+$");
-const isValidPath = (path) => {
+const isValidPath = (path: string): boolean => {
     if (!pathRegex.test(path)) {
         return false;
     }
@@ -66,5 +71,6 @@ const isValidPath = (path) => {
         .split('/')
         .slice(1)
         .map(replaceDerive)
+        .map(el => parseInt(el, 10))
         .some(isNaN);
 };
