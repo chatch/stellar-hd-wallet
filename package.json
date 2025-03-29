@@ -1,6 +1,6 @@
 {
   "name": "stellar-hd-wallet",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Key derivation for Stellar (SEP-0005)",
   "author": "Chris Hatch",
   "repository": {
@@ -38,7 +38,7 @@
     "keys"
   ],
   "dependencies": {
-    "@stellar/stellar-base": "12.1.1",
+    "@stellar/stellar-base": "13.1.0",
     "@types/create-hmac": "1.1.1",
     "bip39": "3.1.0",
     "create-hmac": "1.1.7"
