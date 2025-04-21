@@ -14,7 +14,8 @@
   "exports": {
     ".": {
       "types": "./lib/stellar-hd-wallet.d.ts",
-      "import": "./lib/stellar-hd-wallet.js"
+      "import": "./lib/stellar-hd-wallet.js",
+      "default": "./lib/stellar-hd-wallet.js"
     }
   },
   "files": [
