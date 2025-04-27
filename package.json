@@ -1,6 +1,6 @@
 {
   "name": "stellar-hd-wallet",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Key derivation for Stellar (SEP-0005)",
   "author": "Chris Hatch",
   "repository": {
