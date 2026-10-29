@@ -1,9 +1,7 @@
 {
-  "seedWords":
-    "cable spray genius state float twenty onion head street palace net private method loan turn phrase state blanket interest dry amazing dress blast tube",
+  "seedWords": "cable spray genius state float twenty onion head street palace net private method loan turn phrase state blanket interest dry amazing dress blast tube",
   "passphrase": "p4ssphr4se",
-  "parentKey":
-    "c83c61dc97d37832f0f20e258c3ba4040a258800fd14abaff124a4dee114b17e",
+  "parentKey": "c83c61dc97d37832f0f20e258c3ba4040a258800fd14abaff124a4dee114b17e",
   "keypairs": [
     [
       "GDAHPZ2NSYIIHZXM56Y36SBVTV5QKFIZGYMMBHOU53ETUSWTP62B63EQ",

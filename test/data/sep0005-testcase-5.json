@@ -1,8 +1,6 @@
 {
-  "seedWords":
-    "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
-  "parentKey":
-    "03df7921b4f789040e361d07d5e4eddad277c376350d7b5d585400a0ef18f2f5",
+  "seedWords": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+  "parentKey": "03df7921b4f789040e361d07d5e4eddad277c376350d7b5d585400a0ef18f2f5",
   "keypairs": [
     [
       "GB3JDWCQJCWMJ3IILWIGDTQJJC5567PGVEVXSCVPEQOTDN64VJBDQBYX",
