@@ -8,14 +8,15 @@
  * The original ed25519-hd-key module is licensed under "GPL-3".
  */
 
-import createHmac from "create-hmac";
+import { hmac } from "@noble/hashes/hmac.js";
+import { sha512 } from "@noble/hashes/sha2.js";
 
 const ED25519_CURVE = "ed25519 seed";
 const HARDENED_OFFSET = 0x80000000;
 
 export interface KeyData {
-  key: Buffer;
-  chainCode: Buffer;
+  key: Uint8Array;
+  chainCode: Uint8Array;
 }
 
 export const derivePath = (path: string, seed: string): KeyData => {
@@ -35,8 +36,7 @@ export const derivePath = (path: string, seed: string): KeyData => {
 };
 
 const getMasterKeyFromSeed = (seed: string): KeyData => {
-  const hmac = createHmac("sha512", ED25519_CURVE);
-  const I = hmac.update(Buffer.from(seed, "hex")).digest();
+  const I = hmac(sha512, Buffer.from(ED25519_CURVE), Buffer.from(seed, "hex"));
   const IL = I.slice(0, 32);
   const IR = I.slice(32);
   return {
@@ -49,7 +49,7 @@ const CKDPriv = ({ key, chainCode }: KeyData, index: number): KeyData => {
   const indexBuffer = Buffer.allocUnsafe(4);
   indexBuffer.writeUInt32BE(index, 0);
   const data = Buffer.concat([Buffer.alloc(1, 0), key, indexBuffer]);
-  const I = createHmac("sha512", chainCode).update(data).digest();
+  const I = hmac(sha512, chainCode, data);
   const IL = I.slice(0, 32);
   const IR = I.slice(32);
   return {

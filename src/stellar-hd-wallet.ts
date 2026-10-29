@@ -5,7 +5,7 @@ import {
   wordlists,
 } from "bip39";
 import { derivePath } from "./hd-key.js";
-import { Keypair } from "@stellar/stellar-base";
+import Keypair from "./keypair.js";
 
 const ENTROPY_BITS = 256; // = 24 word mnemonic
 
@@ -116,13 +116,13 @@ class StellarHDWallet {
    */
   derive(path: string): Buffer {
     const data = derivePath(path, this.seedHex);
-    return data.key;
+    return Buffer.from(data.key);
   }
 
   /**
    * Get Stellar account keypair for child key at given index
    * @param {Number} index Account index into path m/44'/148'/{index}
-   * @return {stellar-base.Keypair} Keypair instance for the account
+   * @return {Keypair} Keypair instance for the account
    */
   getKeypair(index: number): Keypair {
     const key = this.derive(`m/44'/148'/${index}'`);

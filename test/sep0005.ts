@@ -1,5 +1,5 @@
 import assert from "assert";
-import { Keypair } from "@stellar/stellar-base";
+import Keypair from "../src/keypair.js";
 import StellarHDWallet from "../src/stellar-hd-wallet.js";
 import fs from "fs";
 import path from "path";
