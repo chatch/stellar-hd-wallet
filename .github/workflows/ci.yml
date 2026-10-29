@@ -46,6 +46,10 @@ jobs:
       - name: Run tests
         run: pnpm test
 
+      - name: Review dependencies for known vulnerabilities
+        if: github.event_name == 'pull_request'
+        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+
       - name: Generate SBOM (CycloneDX)
         run: pnpm run sbom
 
