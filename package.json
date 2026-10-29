@@ -1,7 +1,11 @@
 {
   "name": "stellar-hd-wallet",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Key derivation for Stellar (SEP-0005)",
+  "packageManager": "pnpm@12.16.1",
+  "engines": {
+    "node": ">=20.19"
+  },
   "author": "Chris Hatch",
   "repository": {
     "type": "git",
@@ -22,11 +26,26 @@
     "lib"
   ],
   "scripts": {
-    "test": "mocha --require ts-node/register --loader=ts-node/esm test/**/*.ts",
+    "test": "mocha",
     "build": "tsc",
     "clean": "rimraf lib",
-    "prepare": "npm run clean && npm run build",
-    "prepublish": "npm run prepare"
+    "lint": "pnpm lint:eslint && pnpm lint:prettier",
+    "lint:eslint": "eslint '**/*.{ts,tsx,js,jsx}' --ignore-pattern '**/eslint.config.js'",
+    "lint:prettier": "prettier '**/*.{ts,tsx,js,jsx,json,md,yaml,yml}' --check || echo '⚠️  Warning: Prettier formatting issues found. Run \"pnpm fixstyle\" to fix them.'",
+    "typecheck": "tsc --noEmit",
+    "fixall": "pnpm fixstyle && pnpm fixsrc",
+    "fixsrc": "eslint '**/*.{ts,tsx,js,jsx}' --ignore-pattern '**/eslint.config.js' --fix",
+    "fixstyle": "prettier '**/*.{ts,tsx,js,jsx,json,md,yaml,yml}' --write",
+    "sbom": "pnpm sbom --sbom-format cyclonedx --lockfile-only --out stellar-hd-wallet-%v.sbom.cdx.json",
+    "sbom:spdx": "pnpm sbom --sbom-format spdx --lockfile-only --out stellar-hd-wallet-%v.spdx.json",
+    "prepare": "husky",
+    "prepublishOnly": "pnpm clean && pnpm build"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx,js,jsx,json,md,yaml,yml}": [
+      "pnpm fixstyle",
+      "pnpm run lint:eslint"
+    ]
   },
   "keywords": [
     "SEP-0005",
@@ -39,20 +58,29 @@
     "keys"
   ],
   "dependencies": {
-    "@stellar/stellar-base": "13.1.0",
-    "@types/create-hmac": "1.1.1",
-    "bip39": "3.1.0",
-    "create-hmac": "1.1.7"
+    "@stellar/stellar-base": "^14.1.0",
+    "bip39": "^3.1.2",
+    "create-hmac": "^1.1.7"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.202",
-    "@types/mocha": "^10.0.6",
-    "@types/node": "^20.11.16",
-    "lodash": "4.17.21",
-    "mocha": "^11.1.0",
-    "rimraf": "^5.0.5",
+    "@eslint/js": "^10.0.1",
+    "@types/create-hmac": "^1.1.3",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.19.2",
+    "@typescript-eslint/eslint-plugin": "^8.72.1",
+    "@typescript-eslint/parser": "^8.72.1",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-unused-imports": "^4.4.1",
+    "globals": "^17.13.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "mocha": "^12.0.3",
+    "prettier": "^3.9.10",
+    "rimraf": "^6.1.3",
     "ts-node": "^10.9.2",
-    "tsx": "^4.19.3",
-    "typescript": "^5.3.3"
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.1"
   }
 }

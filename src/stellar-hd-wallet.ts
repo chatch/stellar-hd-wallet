@@ -1,4 +1,9 @@
-import bip39 from "bip39";
+import {
+  generateMnemonic,
+  mnemonicToSeedSync,
+  validateMnemonic,
+  wordlists,
+} from "bip39";
 import { derivePath } from "./hd-key.js";
 import { Keypair } from "@stellar/stellar-base";
 
@@ -27,11 +32,17 @@ class StellarHDWallet {
    * @param {string} [language='english'] Optional language of mnemonic
    * @throws {Error} Invalid Mnemonic
    */
-  static fromMnemonic(mnemonic: string, password?: string, language = "english"): StellarHDWallet {
+  static fromMnemonic(
+    mnemonic: string,
+    password?: string,
+    language = "english",
+  ): StellarHDWallet {
     if (!StellarHDWallet.validateMnemonic(mnemonic, language)) {
       throw new Error(INVALID_MNEMONIC);
     }
-    return new StellarHDWallet(bip39.mnemonicToSeedSync(mnemonic, password).toString("hex"));
+    return new StellarHDWallet(
+      mnemonicToSeedSync(mnemonic, password).toString("hex"),
+    );
   }
 
   /**
@@ -63,14 +74,13 @@ class StellarHDWallet {
   static generateMnemonic({
     entropyBits = ENTROPY_BITS,
     language = "english",
-    rngFn
+    rngFn,
   }: MnemonicOptions = {}): string {
-    if (language && !(language in bip39.wordlists))
+    if (language && !(language in wordlists))
       throw new TypeError(
-        `Language ${language} does not have a wordlist in the bip39 module`
+        `Language ${language} does not have a wordlist in the bip39 module`,
       );
-    const wordlist = bip39.wordlists[language];
-    return bip39.generateMnemonic(entropyBits, rngFn, wordlist);
+    return generateMnemonic(entropyBits, rngFn, wordlists[language]);
   }
 
   /**
@@ -83,13 +93,12 @@ class StellarHDWallet {
    */
   static validateMnemonic(mnemonic?: string, language = "english"): boolean {
     if (!mnemonic) return false;
-    
-    if (language && !(language in bip39.wordlists))
+
+    if (language && !(language in wordlists))
       throw new TypeError(
-        `Language ${language} does not have a wordlist in the bip39 module`
+        `Language ${language} does not have a wordlist in the bip39 module`,
       );
-    const wordlist = bip39.wordlists[language];
-    return bip39.validateMnemonic(mnemonic, wordlist);
+    return validateMnemonic(mnemonic, wordlists[language]);
   }
 
   /**
