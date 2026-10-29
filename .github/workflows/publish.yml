@@ -39,6 +39,9 @@ jobs:
         env:
           HUSKY: 0
 
+      - name: Run typecheck and tests
+        run: pnpm typecheck && pnpm test
+
       - name: Build
         run: pnpm build
 
