@@ -5,6 +5,11 @@
 
 Key derivation for Stellar ([SEP-0005](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0005.md))
 
+**Requirements:** Node.js >= 20.19. This is an **ESM-only** package
+(`"type": "module"`), so `import` syntax is required. CommonJS consumers can
+`require()` it directly on Node.js >= 20.19 (which supports `require()` of
+ESM modules) or use `await import(...)`.
+
 ## Usage
 
 ```ts
@@ -24,7 +29,6 @@ const seedHex =
 const seedBuffer = Buffer.from(seedHex, "hex");
 StellarHDWallet.fromSeed(seedHex);
 StellarHDWallet.fromSeed(seedBuffer);
-
 // mnemonics with different lengths
 StellarHDWallet.generateMnemonic(); // 24 words
 StellarHDWallet.generateMnemonic({ entropyBits: 224 }); // 21 words
@@ -33,6 +37,26 @@ StellarHDWallet.generateMnemonic({ entropyBits: 128 }); // 12 words
 
 // validate a mnemonic
 StellarHDWallet.validateMnemonic("too short and non wordlist words"); // false
+```
+
+## Keypair
+
+This library's minimal `Keypair` class is exported from the package entry
+(its constructor is private; the only public factory is
+`fromRawEd25519Seed`):
+
+```ts
+import StellarHDWallet, { Keypair } from "stellar-hd-wallet";
+
+const wallet = StellarHDWallet.fromMnemonic(mnemonic);
+const kp = wallet.getKeypair(0); // Keypair for account 0
+
+// or construct one directly from a raw 32-byte ed25519 seed
+const kp2 = Keypair.fromRawEd25519Seed(kp.rawSeed());
+
+kp2.rawSeed(); // => raw 32-byte ed25519 seed as Uint8Array
+kp2.publicKey(); // => "G..." public key
+kp2.secret(); // => "S..." secret seed
 ```
 
 ## Interoperability with @stellar/stellar-sdk / @stellar/stellar-base
@@ -44,11 +68,14 @@ signing, transaction building, Horizon, etc. — convert to a SDK keypair
 in one line:
 
 ```ts
-import { Keypair } from "@stellar/stellar-sdk"; // or @stellar/stellar-base
+import { Keypair as SdkKeypair } from "@stellar/stellar-sdk"; // or @stellar/stellar-base
+// note: this is the *SDK's* Keypair, not this library's — hence the alias
 
-const sdkKeypair = Keypair.fromSecret(wallet.getSecret(0));
+const sdkKeypair = SdkKeypair.fromSecret(wallet.getSecret(0));
 // or, from the raw seed without the strkey round-trip:
-const sdkKeypair2 = Keypair.fromRawEd25519Seed(wallet.getKeypair(0).rawSeed());
+const sdkKeypair2 = SdkKeypair.fromRawEd25519Seed(
+  wallet.getKeypair(0).rawSeed(),
+);
 ```
 
 ## Mnemonic Language
@@ -85,19 +112,19 @@ StellarHDWallet.generateMnemonic({ language: "french", entropyBits: 128 });
 ### Setup
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Build
 
 ```bash
-npm run build
+pnpm build
 ```
 
 ### Test
 
 ```bash
-npm test
+pnpm test
 ```
 
 ## Tests
