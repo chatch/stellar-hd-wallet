@@ -1,0 +1,32 @@
+version: 2
+updates:
+  # Keep npm dependencies fresh
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: monthly
+    groups:
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # @types/node majors track Node.js majors. This project builds and
+      # tests against the @types/node@24 line, so 25/26+ types describe
+      # APIs that aren't guaranteed to exist at runtime. Revisit when the
+      # engines.node floor is bumped to a newer major.
+      - dependency-name: "@types/node"
+        update-types:
+          - "version-update:semver-major"
+
+  # Update SHA-pinned GitHub Actions (dependabot rewrites the pin and
+  # bumps the version comment, keeping the commit-SHA pinning intact)
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        update-types:
+          - "minor"
+          - "patch"

@@ -1,2 +1,13 @@
-lib/
+# Dependencies
 node_modules/
+package-lock.json
+
+# Build outputs
+lib/
+
+# SBOM outputs
+*.sbom.cdx.json
+*.spdx.json
+
+# Logs
+*.log
