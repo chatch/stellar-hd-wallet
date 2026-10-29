@@ -163,4 +163,5 @@ class StellarHDWallet {
   }
 }
 
+export { default as Keypair } from "./keypair.js";
 export default StellarHDWallet;
