@@ -70,6 +70,14 @@ export class Keypair {
   }
 
   /**
+   * Get the raw 32-byte ed25519 seed.
+   * @return {Uint8Array} Raw seed bytes
+   */
+  rawSeed(): Uint8Array {
+    return this.seed;
+  }
+
+  /**
    * Get the account public key as a Stellar strkey ("G...").
    * @return {string} Public key
    */

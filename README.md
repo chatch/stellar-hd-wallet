@@ -1,7 +1,7 @@
 # stellar-hd-wallet
 
 [![NPM Package](https://img.shields.io/npm/v/stellar-hd-wallet.svg?style=flat-square)](https://www.npmjs.org/package/stellar-hd-wallet)
-[![Node.js CI](https://github.com/chatch/stellar-hd-wallet/actions/workflows/nodejs.yml/badge.svg)](https://github.com/chatch/stellar-hd-wallet/actions/workflows/nodejs.yml)
+[![Node.js CI](https://github.com/chatch/stellar-hd-wallet/actions/workflows/ci.yml/badge.svg)](https://github.com/chatch/stellar-hd-wallet/actions/workflows/ci.yml)
 
 Key derivation for Stellar ([SEP-0005](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0005.md))
 
@@ -33,6 +33,22 @@ StellarHDWallet.generateMnemonic({ entropyBits: 128 }); // 12 words
 
 // validate a mnemonic
 StellarHDWallet.validateMnemonic("too short and non wordlist words"); // false
+```
+
+## Interoperability with @stellar/stellar-sdk / @stellar/stellar-base
+
+`getKeypair()` returns this library's own minimal `Keypair` (with
+`publicKey()`, `secret()` and `rawSeed()` accessors) so that no Stellar
+network dependency is bundled. To continue with the full SDK API —
+signing, transaction building, Horizon, etc. — convert to a SDK keypair
+in one line:
+
+```ts
+import { Keypair } from "@stellar/stellar-sdk"; // or @stellar/stellar-base
+
+const sdkKeypair = Keypair.fromSecret(wallet.getSecret(0));
+// or, from the raw seed without the strkey round-trip:
+const sdkKeypair2 = Keypair.fromRawEd25519Seed(wallet.getKeypair(0).rawSeed());
 ```
 
 ## Mnemonic Language
