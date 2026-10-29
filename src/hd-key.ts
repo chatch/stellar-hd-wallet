@@ -58,7 +58,7 @@ const CKDPriv = ({ key, chainCode }: KeyData, index: number): KeyData => {
   };
 };
 
-const replaceDerive = (val: string): string => val.replace("'", "");
+const replaceDerive = (val: string): string => val.replace(/'/g, "");
 const pathRegex = new RegExp("^m(\\/[0-9]+')+$");
 const isValidPath = (path: string): boolean => {
   if (!pathRegex.test(path)) {
