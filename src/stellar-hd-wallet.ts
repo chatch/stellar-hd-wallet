@@ -8,9 +8,12 @@ import { derivePath } from "./hd-key.js";
 import Keypair from "./keypair.js";
 
 const ENTROPY_BITS = 256; // = 24 word mnemonic
+const MAX_HARDENED_INDEX = 0x7fffffff;
 
 const INVALID_SEED = "Invalid seed (must be a Buffer or hex string)";
 const INVALID_MNEMONIC = "Invalid mnemonic (see bip39)";
+const hasWordlist = (language: string): boolean =>
+  Object.prototype.hasOwnProperty.call(wordlists, language);
 
 interface MnemonicOptions {
   entropyBits?: number;
@@ -76,7 +79,7 @@ class StellarHDWallet {
     language = "english",
     rngFn,
   }: MnemonicOptions = {}): string {
-    if (language && !(language in wordlists))
+    if (language && !hasWordlist(language))
       throw new TypeError(
         `Language ${language} does not have a wordlist in the bip39 module`,
       );
@@ -94,7 +97,7 @@ class StellarHDWallet {
   static validateMnemonic(mnemonic?: string, language = "english"): boolean {
     if (!mnemonic) return false;
 
-    if (language && !(language in wordlists))
+    if (language && !hasWordlist(language))
       throw new TypeError(
         `Language ${language} does not have a wordlist in the bip39 module`,
       );
@@ -106,6 +109,9 @@ class StellarHDWallet {
    * @param {string} seedHex Hex string
    */
   constructor(seedHex: string) {
+    if (!/^(?:[0-9a-fA-F]{2})+$/.test(seedHex)) {
+      throw new TypeError(INVALID_SEED);
+    }
     this.seedHex = seedHex;
   }
 
@@ -125,6 +131,15 @@ class StellarHDWallet {
    * @return {Keypair} Keypair instance for the account
    */
   getKeypair(index: number): Keypair {
+    if (
+      !Number.isSafeInteger(index) ||
+      index < 0 ||
+      index > MAX_HARDENED_INDEX
+    ) {
+      throw new RangeError(
+        `Invalid account index (must be an integer between 0 and ${MAX_HARDENED_INDEX})`,
+      );
+    }
     const key = this.derive(`m/44'/148'/${index}'`);
     return Keypair.fromRawEd25519Seed(key);
   }

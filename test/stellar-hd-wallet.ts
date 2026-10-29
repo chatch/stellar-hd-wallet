@@ -95,6 +95,41 @@ describe("StellarHDWallet", () => {
       assert.equal(wallet.getPublicKey(0), FROM_MNEMONIC_ENGLISH_PUBLIC_KEY_0);
       assert.equal(wallet.getSecret(0), FROM_MNEMONIC_ENGLISH_SECRET_KEY_0);
     });
+
+    it("rejects malformed and empty seeds", () => {
+      for (const seed of ["", "0", "zz", "01xz"]) {
+        assert.throws(
+          () => StellarHDWallet.fromSeed(seed),
+          /Invalid seed \(must be a Buffer or hex string\)/,
+        );
+      }
+      assert.throws(
+        () => StellarHDWallet.fromSeed(Buffer.alloc(0)),
+        /Invalid seed \(must be a Buffer or hex string\)/,
+      );
+    });
+
+    it("rejects malformed seeds passed directly to the constructor", () => {
+      assert.throws(
+        () => new StellarHDWallet("not-hex"),
+        /Invalid seed \(must be a Buffer or hex string\)/,
+      );
+    });
+  });
+
+  describe("account index", () => {
+    const wallet = StellarHDWallet.fromSeed("00");
+
+    it("accepts the full hardened child index range", () => {
+      assert.doesNotThrow(() => wallet.getKeypair(0));
+      assert.doesNotThrow(() => wallet.getKeypair(0x7fffffff));
+    });
+
+    it("rejects invalid account indices", () => {
+      for (const index of [-1, 1.5, 0x80000000, NaN, Infinity]) {
+        assert.throws(() => wallet.getKeypair(index), RangeError);
+      }
+    });
   });
 
   describe("generateMnemonic", () => {
@@ -172,6 +207,13 @@ describe("StellarHDWallet", () => {
           );
         }
       });
+
+      it("rejects inherited wordlist property names", () => {
+        assert.throws(
+          () => StellarHDWallet.generateMnemonic({ language: "toString" }),
+          /Language toString does not have a wordlist in the bip39 module/,
+        );
+      });
     });
   });
 
@@ -216,6 +258,13 @@ describe("StellarHDWallet", () => {
         .join(" ");
       assert.equal(twentyThreeWords.split(" ").length, 23);
       assert.equal(val(twentyThreeWords), false);
+    });
+
+    it("rejects inherited wordlist property names", () => {
+      assert.throws(
+        () => val(MNEMONIC_ENGLISH, "toString"),
+        /Language toString does not have a wordlist in the bip39 module/,
+      );
     });
   });
 });

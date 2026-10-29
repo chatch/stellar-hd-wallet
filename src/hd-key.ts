@@ -13,6 +13,7 @@ import { sha512 } from "@noble/hashes/sha2.js";
 
 const ED25519_CURVE = "ed25519 seed";
 const HARDENED_OFFSET = 0x80000000;
+const MAX_HARDENED_INDEX = HARDENED_OFFSET - 1;
 
 export interface KeyData {
   key: Uint8Array;
@@ -64,10 +65,15 @@ const isValidPath = (path: string): boolean => {
   if (!pathRegex.test(path)) {
     return false;
   }
-  return !path
+  return path
     .split("/")
     .slice(1)
     .map(replaceDerive)
     .map((el) => parseInt(el, 10))
-    .some(isNaN);
+    .every(
+      (segment) =>
+        Number.isSafeInteger(segment) &&
+        segment >= 0 &&
+        segment <= MAX_HARDENED_INDEX,
+    );
 };

@@ -55,4 +55,15 @@ describe("SEP-0005", () => {
   describe("Test Case 3", specTestCase(3));
   describe("Test Case 4", specTestCase(4));
   describe("Test Case 5", specTestCase(5));
+
+  it("rejects derivation path segments outside the hardened index range", () => {
+    const wallet = StellarHDWallet.fromSeed("00");
+
+    assert.throws(() => wallet.derive("m/2147483648'"), {
+      message: "Invalid derivation path",
+    });
+    assert.throws(() => wallet.derive("m/9007199254740992'"), {
+      message: "Invalid derivation path",
+    });
+  });
 });

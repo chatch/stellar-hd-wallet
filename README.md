@@ -21,7 +21,7 @@ wallet.derive(`m/44'/148'/0'`); // => raw key for account 0 as a Buffer
 // wallet instance from seeds
 const seedHex =
   "794fc27373add3ac7676358e868a787bcbf1edfac83edcecdb34d7f1068c645dbadba563f3f3a4287d273ac4f052d2fc650ba953e7af1a016d7b91f4d273378f";
-const seedBuffer = Buffer.from(seedHex);
+const seedBuffer = Buffer.from(seedHex, "hex");
 StellarHDWallet.fromSeed(seedHex);
 StellarHDWallet.fromSeed(seedBuffer);
 

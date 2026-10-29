@@ -66,7 +66,8 @@ export class Keypair {
     if (seed.length !== 32) {
       throw new Error("Seed must be 32 bytes long");
     }
-    return new Keypair(seed, getPublicKey(seed));
+    const ownedSeed = Uint8Array.from(seed);
+    return new Keypair(ownedSeed, getPublicKey(ownedSeed));
   }
 
   /**
@@ -74,7 +75,7 @@ export class Keypair {
    * @return {Uint8Array} Raw seed bytes
    */
   rawSeed(): Uint8Array {
-    return this.seed;
+    return Uint8Array.from(this.seed);
   }
 
   /**
