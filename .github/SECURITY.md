@@ -2,13 +2,14 @@
 
 ## Supported Versions
 
-Security updates are applied to the latest published major version.
+Security updates are applied to the latest published major version and to the
+1.0.x line, which is the version currently in widest use.
 
-| Version | Supported |
-| ------- | --------- |
-| 2.x     | ✅        |
-| 1.x     | ❌        |
-| < 1.0   | ❌        |
+| Version | Supported       |
+| ------- | --------------- |
+| 2.x     | ✅ (from 2.0.0) |
+| 1.0.x   | ✅              |
+| < 1.0   | ❌              |
 
 ## Reporting a Vulnerability
 
