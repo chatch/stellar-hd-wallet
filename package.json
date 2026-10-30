@@ -1,6 +1,6 @@
 {
   "name": "stellar-hd-wallet",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Key derivation for Stellar (SEP-0005)",
   "packageManager": "pnpm@12.16.1",
   "engines": {
