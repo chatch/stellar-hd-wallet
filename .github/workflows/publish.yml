@@ -54,8 +54,18 @@ jobs:
       - name: Install cosign
         uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
 
-      - name: Download published tarball from npm
-        run: npm pack "stellar-hd-wallet@$(node -p "require('./package.json').version")"
+      - name: Download published tarball from npm (with retries for CDN lag)
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          for i in $(seq 1 12); do
+            if npm pack "stellar-hd-wallet@${VERSION}"; then
+              exit 0
+            fi
+            echo "Version ${VERSION} not visible on the registry yet (attempt ${i}/12); retrying in 20s..."
+            sleep 20
+          done
+          echo "Version ${VERSION} never appeared on the registry."
+          exit 1
 
       - name: Sign tarball (keyless)
         run: cosign sign-blob --yes --bundle stellar-hd-wallet-*.tgz.sigstore stellar-hd-wallet-*.tgz
