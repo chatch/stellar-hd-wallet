@@ -2,6 +2,8 @@
 
 [![NPM Package](https://img.shields.io/npm/v/stellar-hd-wallet.svg?style=flat-square)](https://www.npmjs.org/package/stellar-hd-wallet)
 [![Node.js CI](https://github.com/chatch/stellar-hd-wallet/actions/workflows/ci.yml/badge.svg)](https://github.com/chatch/stellar-hd-wallet/actions/workflows/ci.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/chatch/stellar-hd-wallet/badge)](https://api.scorecard.dev/projects/github.com/chatch/stellar-hd-wallet)
+[![Code Coverage](https://codecov.io/gh/chatch/stellar-hd-wallet/branch/main/graph/badge.svg)](https://codecov.io/gh/chatch/stellar-hd-wallet)
 
 Key derivation for Stellar ([SEP-0005](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0005.md))
 

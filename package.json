@@ -28,6 +28,7 @@
   ],
   "scripts": {
     "test": "mocha",
+    "coverage": "c8 --reporter=lcov --reporter=text-summary mocha",
     "build": "tsc",
     "clean": "rimraf lib",
     "lint": "pnpm lint:eslint && pnpm lint:prettier",
@@ -70,6 +71,7 @@
     "@types/node": "^24.19.2",
     "@typescript-eslint/eslint-plugin": "^8.72.1",
     "@typescript-eslint/parser": "^8.72.1",
+    "c8": "^12.0.0",
     "eslint": "^10.13.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-unused-imports": "^4.4.1",

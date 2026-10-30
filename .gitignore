@@ -5,6 +5,9 @@ package-lock.json
 # Build outputs
 lib/
 
+# Coverage reports
+coverage/
+
 # SBOM outputs
 *.sbom.cdx.json
 *.spdx.json
