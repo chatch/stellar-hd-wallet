@@ -27,6 +27,11 @@ jobs:
     permissions:
       contents: write
       id-token: write
+    env:
+      VERSION: ${{ inputs.version }}
+      TAG: ${{ inputs.tag || format('v{0}', inputs.version) }}
+      TARBALL: stellar-hd-wallet-${{ inputs.version }}.tgz
+      SBOM: stellar-hd-wallet-${{ inputs.version }}.sbom.cdx.json
 
     steps:
       - name: Checkout
@@ -48,7 +53,6 @@ jobs:
 
       - name: Download published tarball from npm (with retries for CDN lag)
         run: |
-          VERSION="${{ inputs.version }}"
           for i in $(seq 1 12); do
             if npm pack "stellar-hd-wallet@${VERSION}"; then
               exit 0
@@ -63,13 +67,12 @@ jobs:
         run: pnpm run sbom
 
       - name: Sign tarball (keyless)
-        run: cosign sign-blob --yes --bundle stellar-hd-wallet-*.tgz.sigstore stellar-hd-wallet-*.tgz
+        run: cosign sign-blob --yes --bundle "${TARBALL}.sigstore" "${TARBALL}"
 
       - name: Sign SBOM (keyless)
-        run: cosign sign-blob --yes --bundle stellar-hd-wallet-*.sbom.cdx.json.sigstore stellar-hd-wallet-*.sbom.cdx.json
+        run: cosign sign-blob --yes --bundle "${SBOM}.sigstore" "${SBOM}"
 
       - name: Attach tarball, SBOM, and signatures to release
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ inputs.tag || format('v{0}', inputs.version) }}
-        run: gh release upload "${TAG}" stellar-hd-wallet-*.tgz stellar-hd-wallet-*.tgz.sigstore stellar-hd-wallet-*.sbom.cdx.json stellar-hd-wallet-*.sbom.cdx.json.sigstore --clobber
+        run: gh release upload "${TAG}" "${TARBALL}" "${TARBALL}.sigstore" "${SBOM}" "${SBOM}.sigstore" --clobber
